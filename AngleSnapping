@@ -1,0 +1,85 @@
+    private Vector2 SnappedVector(Vector2 deltaVector) {
+        float angle = GetAngle(deltaVector.x, deltaVector.y);
+
+        // check if angle falls in the range of [15pi/8 and 1pi/8) 
+        if (angle >= (15 * Mathf.PI) / 8 || angle < Mathf.PI / 8) {
+            // snap to 0
+            return new Vector2(1f, 0f);
+
+            // check if angle is in the range [1pi/8, 3pi/8)
+        }
+        else if (AngleBetweenBounds(angle, 1, 3, 8)) {
+            // snap to pi/4
+            return new Vector2(Mathf.Sqrt(2f) / 2f, Mathf.Sqrt(2f) / 2f);
+
+            // check if angle is in the range [3pi/8, 5pi/8)
+        }
+        else if (AngleBetweenBounds(angle, 3, 5, 8)) {
+            //snap to pi/2
+            return new Vector2(0f, 1f);
+
+            // check if angle is in the range [5pi/8, 7pi/8)
+        }
+        else if (AngleBetweenBounds(angle, 5, 7, 8)) {
+            //snap to 3pi/4
+            return new Vector2(-Mathf.Sqrt(2f) / 2f, Mathf.Sqrt(2f) / 2f);
+
+            // check if angle is in the range [7pi/8, 9pi/8)
+        }
+        else if (AngleBetweenBounds(angle, 7, 9, 8)) {
+            //snap to 4pi/4
+            return new Vector2(-1f, 0f);
+
+            // check if angle is in the range [9pi/8, 11pi/8)
+        }
+        else if (AngleBetweenBounds(angle, 9, 11, 8)) {
+            //snap to 5pi/4
+            return new Vector2(-Mathf.Sqrt(2f) / 2f, -Mathf.Sqrt(2f) / 2f);
+
+            // check if angle is in the range [11pi/8, 13pi/8)
+        }
+        else if (AngleBetweenBounds(angle, 11, 13, 8)) {
+            //snap to 3pi/2
+            return new Vector2(0f, -1f);
+
+            // check if angle is in the range [13pi/8, 15pi/8)
+        }
+        else if (AngleBetweenBounds(angle, 13, 15, 8)) {
+            //snap to 7pi/4
+            return new Vector2(Mathf.Sqrt(2f) / 2f, -Mathf.Sqrt(2f) / 2f);
+        }
+        return deltaVector;//if it got here, somthing wasn't right...
+    }
+
+
+    // Returns if the angle entered is between the bounds start*pi/denomiator and end*pi/denomiator
+    // Bounds include the start and exclude the end.
+    private bool AngleBetweenBounds(float angle, float start, float end, float denominator) {
+        return (angle >= (start * Mathf.PI) / denominator) && (angle < (end * Mathf.PI) / denominator);
+    }
+
+    // Returns the angle in radians from the positive X axis between 0 and ~2pi
+    private float GetAngle(float xCoord, float yCoord) {
+        Vector2 deltaVector = new Vector2(xCoord, yCoord);
+        float ang;
+        float x = deltaVector.x;
+        float y = deltaVector.y;
+
+        if (x >= 0 && y >= 0) {
+            // Quad 1
+            ang = Mathf.Atan(deltaVector.y / deltaVector.x);
+        }
+        else if (y >= 0 && x < 0) {
+            // Quad 2
+            ang = Mathf.Atan((deltaVector.y) / deltaVector.x) + Mathf.PI;
+        }
+        else if (y < 0 && x < 0) {
+            // Quad 3
+            ang = Mathf.Atan(deltaVector.y / deltaVector.x) + Mathf.PI;
+        }
+        else {
+            // Quad 4
+            ang = 2 * Mathf.PI + (Mathf.Atan((deltaVector.y) / (deltaVector.x)));
+        }
+        return ang;
+    }
